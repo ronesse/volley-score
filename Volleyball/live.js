@@ -1,4 +1,3 @@
-  <script type="text/babel">
     const { useCallback, useEffect, useMemo, useRef, useState, memo } = React;
 
     const API_BASE = "https://volleyball.ronesse.no";
@@ -636,4 +635,3 @@
     }
 
     ReactDOM.createRoot(document.getElementById("live-root")).render(<App />);
-  </script>

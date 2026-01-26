@@ -1,4 +1,3 @@
-<script type="text/babel">
 const { useEffect, useMemo, useRef, useState } = React;
 
 /* ===========================
@@ -705,4 +704,3 @@ function App(){
 }
 
 ReactDOM.createRoot(document.getElementById("hub-root")).render(<App />);
-</script>
