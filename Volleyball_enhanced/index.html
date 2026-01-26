@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Volleyball Live & Hub – Enhanced</title>
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#020617;
+      --bg-soft:#020617;
+      --card:#020617;
+      --border:#1f2937;
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --accent:#f97316;
+    }
+    body[data-theme="light"]{
+      --bg:#f6f7f9;
+      --bg-soft:#eef2ff;
+      --card:#ffffff;
+      --border:#e5e6eb;
+      --text:#111827;
+      --muted:#6b7280;
+      --accent:#ea580c;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      background:radial-gradient(circle at top,#1f2937 0,#020617 55%);
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+    }
+    .shell{
+      width:100%;
+      max-width:1100px;
+      padding:16px 16px 90px;
+    }
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:12px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .brand-logo{
+      width:38px;height:38px;border-radius:999px;
+      border:1px solid rgba(248,250,252,0.18);
+      background:radial-gradient(circle at 30% 0,#fed7aa 0,#f97316 45%,#7c2d12 90%);
+      display:flex;align-items:center;justify-content:center;
+      font-weight:800;font-size:14px;
+      color:#0b1120;
+    }
+    .brand-text-title{font-weight:650;font-size:18px}
+    .brand-text-sub{font-size:12px;color:var(--muted)}
+    .tabs-desktop{
+      display:flex;gap:6px;
+      padding:4px;
+      border-radius:999px;
+      background:rgba(15,23,42,0.85);
+      border:1px solid rgba(148,163,184,0.35);
+      box-shadow:0 18px 45px rgba(0,0,0,0.75);
+      backdrop-filter:blur(14px);
+    }
+    .tabBtn{
+      border:none;
+      background:transparent;
+      color:var(--muted);
+      padding:6px 12px;
+      border-radius:999px;
+      font-size:13px;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    .tabBtn span.icon{font-size:16px}
+    .tabBtn.active{
+      background:radial-gradient(circle at top left,rgba(248,250,252,0.1),rgba(15,23,42,0.98));
+      color:var(--text);
+      box-shadow:0 10px 30px rgba(0,0,0,0.75);
+    }
+    .themeToggle{
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,0.5);
+      background:rgba(15,23,42,0.9);
+      color:var(--text);
+      padding:6px 12px;
+      font-size:13px;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      box-shadow:0 12px 35px rgba(0,0,0,0.6);
+    }
+    main{
+      margin-top:12px;
+      border-radius:18px;
+      border:1px solid rgba(148,163,184,0.35);
+      background:radial-gradient(circle at top left,rgba(148,163,184,0.16),rgba(15,23,42,0.98));
+      box-shadow:0 22px 55px rgba(0,0,0,0.85);
+      padding:10px;
+    }
+    .view{display:none}
+    .view.active{display:block}
+    #live-root,#hub-root{min-height:320px;background:transparent}
+
+    .bottom-nav{
+      position:fixed;
+      left:0;right:0;bottom:0;
+      padding:6px 10px 10px;
+      background:radial-gradient(circle at top,rgba(15,23,42,0.96),rgba(2,6,23,0.98));
+      border-top:1px solid rgba(15,23,42,0.95);
+      display:flex;
+      justify-content:space-around;
+      gap:10px;
+      backdrop-filter:blur(16px);
+      z-index:40;
+    }
+    .bottom-nav button{
+      flex:1;
+      max-width:200px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,0.5);
+      background:transparent;
+      color:var(--muted);
+      padding:6px 8px;
+      font-size:12px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:2px;
+      cursor:pointer;
+    }
+    .bottom-nav button span.icon{font-size:16px}
+    .bottom-nav button.active{
+      background:radial-gradient(circle at top left,rgba(248,250,252,0.12),rgba(15,23,42,0.98));
+      color:var(--text);
+      box-shadow:0 12px 30px rgba(0,0,0,0.9);
+    }
+    @media (max-width:800px){
+      .tabs-desktop{display:none;}
+      .shell{padding-bottom:90px;}
+    }
+    @media (min-width:801px){
+      .bottom-nav{display:none;}
+    }
+  </style>
+</head>
+<body data-theme="light">
+  <div class="shell">
+    <header>
+      <div class="brand">
+        <div class="brand-logo">VB</div>
+        <div>
+          <div class="brand-text-title">Volleyball Live</div>
+          <div class="brand-text-sub">Livescore · Lag · Spillere</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="tabs-desktop">
+          <button class="tabBtn active" data-tab="live"><span class="icon">🏐</span><span>Livescore</span></button>
+          <button class="tabBtn" data-tab="hub"><span class="icon">⭐</span><span>Volley Hub</span></button>
+        </div>
+        <button id="themeBtn" class="themeToggle"><span>🌙</span><span>Mørk bakgrunn</span></button>
+      </div>
+    </header>
+
+    <main>
+      <div id="live-root" class="view active"></div>
+      <div id="hub-root" class="view"></div>
+    </main>
+  </div>
+
+  <nav class="bottom-nav">
+    <button class="active" data-tab="live">
+      <span class="icon">🏐</span>
+      <span>Live</span>
+    </button>
+    <button data-tab="hub">
+      <span class="icon">⭐</span>
+      <span>Hub</span>
+    </button>
+  </nav>
+
+  <script>
+    (function(){
+      const body = document.body;
+      const themeBtn = document.getElementById("themeBtn");
+      let theme = "light";
+
+      function setTheme(t){
+        theme = t;
+        body.setAttribute("data-theme", t);
+        themeBtn.innerHTML = t === "light"
+          ? "<span>🌙</span><span>Mørk bakgrunn</span>"
+          : "<span>🌞</span><span>Lys bakgrunn</span>";
+      }
+
+      themeBtn.addEventListener("click", () => {
+        setTheme(theme === "light" ? "dark" : "light");
+        if(location.hash === "#light" || location.hash === "#dark"){
+          history.replaceState(null,"",location.pathname+location.search);
+        }
+      });
+
+      const views = {
+        live: document.getElementById("live-root"),
+        hub:  document.getElementById("hub-root"),
+      };
+      const desktopTabs = document.querySelectorAll(".tabs-desktop .tabBtn");
+      const mobileTabs  = document.querySelectorAll(".bottom-nav button");
+
+      function setTab(tab){
+        if(!views[tab]) tab = "live";
+        Object.keys(views).forEach(k => views[k].classList.toggle("active", k === tab));
+        desktopTabs.forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+        mobileTabs.forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+        const hash = tab === "live" ? "#live" : "#hub";
+        if(location.hash !== hash){
+          history.replaceState(null, "", hash);
+        }
+      }
+
+      desktopTabs.forEach(b => b.addEventListener("click", () => setTab(b.dataset.tab)));
+      mobileTabs.forEach(b => b.addEventListener("click", () => setTab(b.dataset.tab)));
+
+      window.addEventListener("hashchange", () => {
+        if(location.hash === "#hub") setTab("hub");
+        else setTab("live");
+      });
+
+      if(location.hash === "#hub") setTab("hub"); else setTab("live");
+      setTheme("light");
+    })();
+  </script>
+
+  <script type="text/babel" src="live.js"></script>
+  <script type="text/babel" src="hub.js"></script>
+</body>
+</html>

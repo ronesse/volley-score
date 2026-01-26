@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Volleyball Live & Hub</title>
+
+  <!-- React + Babel -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#f6f7f9;
+      --card:#ffffff;
+      --border:#e5e6eb;
+      --text:#111827;
+      --muted:#6b7280;
+    }
+    body[data-theme="dark"]{
+      --bg:#020617;
+      --card:#020617;
+      --border:#1f2937;
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+    }
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:18px;
+    }
+    .header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-bottom:12px;
+    }
+    .tabs{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .tabBtn{
+      border:1px solid var(--border);
+      background:var(--card);
+      border-radius:999px;
+      padding:6px 14px;
+      font-size:13px;
+      cursor:pointer;
+    }
+    .tabBtn.active{
+      background:#111827;
+      color:#fff;
+      border-color:#111827;
+    }
+    .view{ display:none; }
+    .view.active{ display:block; }
+  </style>
+</head>
+
+<body data-theme="light">
+  <div class="wrap">
+    <div class="header">
+      <div>
+        <h1>🏐 Volleyball</h1>
+        <div class="tabs">
+          <button class="tabBtn active" data-tab="live">Livescore</button>
+          <button class="tabBtn" data-tab="hub">Volley Hub</button>
+        </div>
+      </div>
+      <button id="themeBtn" class="tabBtn">🌙 Mørk</button>
+    </div>
+
+    <div id="live-root" class="view active"></div>
+    <div id="hub-root" class="view"></div>
+  </div>
+
+  <script>
+    (function(){
+      let theme = "light";
+      const body = document.body;
+      const btn  = document.getElementById("themeBtn");
+
+      btn.onclick = () => {
+        theme = theme === "light" ? "dark" : "light";
+        body.setAttribute("data-theme", theme);
+        btn.textContent = theme === "light" ? "🌙 Mørk" : "🌞 Lys";
+      };
+
+      document.querySelectorAll(".tabBtn[data-tab]").forEach(b => {
+        b.onclick = () => {
+          document.querySelectorAll(".tabBtn[data-tab]").forEach(x => x.classList.remove("active"));
+          b.classList.add("active");
+          document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+          document.getElementById(b.dataset.tab + "-root").classList.add("active");
+        };
+      });
+    })();
+  </script>
+
+  <!-- Her kommer appene dine -->
+  <script type="text/babel" src="live.js"></script>
+  <script type="text/babel" src="hub.js"></script>
+</body>
+</html>
